@@ -45,7 +45,7 @@ async function translateText(text, targetLang = "ur") {
 export default function DiseaseResult({ isOpen, onClose, diseases }) {
     const [isTranslating, setIsTranslating] = useState(false)
     const [translatedDiseases, setTranslatedDiseases] = useState(null)
-    const uniqueDiseases = diseases.filter((disease) => !disease.redundant)
+    const uniqueDiseases = diseases?.filter((disease) => !disease.redundant)
 
     const handleTranslate = async () => {
         setIsTranslating(true)
@@ -148,7 +148,7 @@ export default function DiseaseResult({ isOpen, onClose, diseases }) {
                         <TranslationLoadingSkeleton />
                     ) : (
                         <div className="space-y-6">
-                            {diseasesToShow.map((disease) => (
+                            {diseasesToShow?.map((disease) => (
                                 <div key={disease.id} className="space-y-4">
                                     <div className="space-y-2">
                                         <div className="flex items-center justify-between">
@@ -172,31 +172,35 @@ export default function DiseaseResult({ isOpen, onClose, diseases }) {
                                     )}
 
                                     <Accordion type="single" collapsible className="w-full">
-                                        <AccordionItem value="chemical">
-                                            <AccordionTrigger>Chemical Treatment</AccordionTrigger>
-                                            <AccordionContent>
-                                                <ul className="ml-4 space-y-2 list-disc">
-                                                    {disease.details.treatment.chemical.map((treatment, index) => (
-                                                        <li key={index} className="text-sm">
-                                                            {treatment}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </AccordionContent>
-                                        </AccordionItem>
+                                        {disease.details.treatment.chemical && disease.details.treatment.chemical.length > 0 && (
+                                            <AccordionItem value="chemical">
+                                                <AccordionTrigger>Chemical Treatment</AccordionTrigger>
+                                                <AccordionContent>
+                                                    <ul className="ml-4 space-y-2 list-disc">
+                                                        {disease.details.treatment.chemical.map((treatment, index) => (
+                                                            <li key={index} className="text-sm">
+                                                                {treatment}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </AccordionContent>
+                                            </AccordionItem>
+                                        )}
 
-                                        <AccordionItem value="biological">
-                                            <AccordionTrigger>Biological Treatment</AccordionTrigger>
-                                            <AccordionContent>
-                                                <ul className="ml-4 space-y-2 list-disc">
-                                                    {disease.details.treatment.biological.map((treatment, index) => (
-                                                        <li key={index} className="text-sm">
-                                                            {treatment}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </AccordionContent>
-                                        </AccordionItem>
+                                        {disease.details.treatment.biological && disease.details.treatment.biological.length > 0 && (
+                                            <AccordionItem value="biological">
+                                                <AccordionTrigger>Biological Treatment</AccordionTrigger>
+                                                <AccordionContent>
+                                                    <ul className="ml-4 space-y-2 list-disc">
+                                                        {disease.details.treatment.biological.map((treatment, index) => (
+                                                            <li key={index} className="text-sm">
+                                                                {treatment}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </AccordionContent>
+                                            </AccordionItem>
+                                        )}
 
                                         <AccordionItem value="prevention">
                                             <AccordionTrigger>Prevention Methods</AccordionTrigger>

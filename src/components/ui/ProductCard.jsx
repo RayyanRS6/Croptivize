@@ -1,44 +1,97 @@
-import { Star } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { toast } from "sonner"
+import React from "react";
+import { Star } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useAddOrderMutation } from "../../services/productApi";
+import { Loader } from "lucide-react";
+import useAuth from "@/hooks/useAuth";
+import { toast } from "sonner";
 
-export default function ProductCard({ product }) {
+// Helper function to format price
+const formatPrice = (price) => {
+    return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+    }).format(price);
+};
+
+const ProductCard = ({ product }) => {
+    const {
+        _id,
+        name,
+        price,
+        description,
+        image,
+        category,
+        rating,
+        isFeatured,
+        link
+    } = product;
+
+    const { isAuthenticated } = useAuth();
+
+    const [addOrder, { isLoading }] = useAddOrderMutation();
+    const handleBuyNow = async () => {
+        if (!isAuthenticated) {
+            return toast.error("Please login to continue");
+        }
+        try {
+            await addOrder(_id);
+            window.open(link, "_blank");
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     return (
-        <Card className="group overflow-hidden">
-            <div className="relative aspect-[3/1]">
+        <div className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white transition-all hover:shadow-md">
+            {/* Featured badge */}
+            {isFeatured && (
+                <Badge className="absolute left-2 top-2 z-10 bg-primary text-white">
+                    Featured
+                </Badge>
+            )}
+
+            {/* Product image */}
+            <div className="aspect-square overflow-hidden bg-gray-100">
                 <img
-                    src={product.image || "/placeholder.jpg"}
-                    alt={product.name}
-                    className="object-cover transition-transform group-hover:scale-105"
+                    src={image || "/placeholder.jpg"}
+                    alt={name}
+                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
                 />
             </div>
-            <CardHeader>
+
+            {/* Product details */}
+            <div className="p-4">
                 <div className="flex items-center justify-between">
-                    <p className="text-sm text-muted-foreground">{product.category}</p>
-                    <div className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-primary text-primary" />
-                        <span className="text-sm font-medium">{product.rating}</span>
-                        <span className="text-sm text-muted-foreground">({product.reviews})</span>
+                    <Badge variant="outline" className="mb-2">
+                        {category}
+                    </Badge>
+                    <div className="flex items-center">
+                        <Star className="mr-1 h-4 w-4 fill-amber-400 text-amber-400" />
+                        <span className="text-sm font-medium">{rating.toFixed(1)}</span>
                     </div>
                 </div>
-                <CardTitle>{product.name}</CardTitle>
-                <CardDescription className="line-clamp-2">{product.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <p className="text-2xl font-bold">${product.price}</p>
-            </CardContent>
-            <CardFooter>
-                <Button
-                    className="w-full"
-                    onClick={() => {
-                        toast.success("Added to cart!")
-                    }}
-                >
-                    Add to Cart
-                </Button>
-            </CardFooter>
-        </Card>
-    )
-}
 
+                <h3 className="mb-1 text-lg font-semibold tracking-tight hover:underline">
+                    {name}
+                </h3>
+
+                <p className="mb-3 line-clamp-2 text-sm text-gray-500">
+                    {description}
+                </p>
+
+                <div className="flex items-center justify-between">
+                    <span className="text-lg font-bold text-primary">
+                        {formatPrice(price)}
+                    </span>
+                    <Button size="sm" onClick={handleBuyNow} disabled={isLoading}>
+                        {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : "Buy Now"}
+                    </Button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default ProductCard;

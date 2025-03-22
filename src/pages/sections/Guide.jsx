@@ -184,7 +184,7 @@ export default function Guide() {
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="flex flex-col items-center gap-1 p-2 rounded-lg bg-muted/50">
                                             <ThermometerSun className="h-4 w-4 text-muted-foreground" />
-                                            <span className="text-sm font-medium">{weather.temp}°C</span>
+                                            <span className="text-sm font-medium">{Math.round(weather.temp)}°C</span>
                                             <span className="text-xs text-muted-foreground">Temp</span>
                                         </div>
                                         <div className="flex flex-col items-center gap-1 p-2 rounded-lg bg-muted/50">
@@ -194,7 +194,7 @@ export default function Guide() {
                                         </div>
                                         <div className="flex flex-col items-center gap-1 p-2 rounded-lg bg-muted/50">
                                             <Wind className="h-4 w-4 text-muted-foreground" />
-                                            <span className="text-sm font-medium">{weather.windSpeed} km/h</span>
+                                            <span className="text-sm font-medium">{Math.round(weather.windSpeed * 3.6)} km/h</span>
                                             <span className="text-xs text-muted-foreground">Wind</span>
                                         </div>
                                         <div className="flex flex-col items-center gap-1 p-2 rounded-lg bg-muted/50">

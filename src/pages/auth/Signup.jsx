@@ -1,35 +1,108 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate, Navigate } from "react-router-dom"
 import { Eye, EyeOff, Leaf } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
+import { useRegisterMutation } from "../../services/authApi"
+import useAuth from "@/hooks/useAuth"
+import { baseURL } from "../../utils/baseURL"
 
 export default function Signup() {
-    const [isLoading, setIsLoading] = useState(false)
+    const { isAuthenticated } = useAuth()
+    const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
+    const [form, setForm] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        password: "",
+        confirmPassword: "",
+    })
+
+    const [register, { isLoading }] = useRegisterMutation()
+
     async function onSubmit(event) {
         event.preventDefault()
-        setIsLoading(true)
+        if (form.password !== form.confirmPassword) {
+            toast.error("Passwords do not match")
+            return
+        }
+        if (form.password.length < 6) {
+            toast.error("Password should be at least 6 characters")
+            return
+        }
+        if (form.phone.length < 10) {
+            toast.error("Phone number should be at least 10 characters")
+            return
+        }
+        if (!form.firstName || !form.lastName || !form.email || !form.phone || !form.password || !form.confirmPassword) {
+            toast.error("Please fill all fields")
+            return
+        }
 
-        // TODO: Implement actual signup logic
-        setTimeout(() => {
-            setIsLoading(false)
-            toast("Account created successfully")
-        }, 1000)
+        try {
+            await register(form).unwrap()
+            toast.success("Account created successfully")
+            setForm({
+                firstName: "",
+                lastName: "",
+                email: "",
+                phone: "",
+                password: "",
+                confirmPassword: "",
+            })
+            navigate("/login")
+        } catch (error) {
+            const err = error.data.message || 'Something went wrong! Try Again'
+            toast.error(err)
+        }
+
     }
 
-    const handleGoogleSignup = async () => {
-        setIsLoading(true)
-        // TODO: Implement Google signup
-        setTimeout(() => {
-            setIsLoading(false)
-            toast("Signed up with Google successfully")
-        }, 1000)
+    const handleGoogleSignup = () => {
+        // Open Google OAuth in a popup
+        const googleAuthUrl = `${baseURL}/user/auth/google`;
+        const newWindow = window.open(googleAuthUrl, '_blank', 'width=500,height=600');
+
+        if (!newWindow) {
+            toast.error("Popup blocked by browser. Please allow popups for this site.");
+            return;
+        }
+
+        // Listen for message from popup window
+        window.addEventListener('message', function handleAuthMessage(event) {
+            const data = event.data;
+
+            // Process the returned data
+            if (data && data.user) {
+                // Store user data and tokens in localStorage
+                localStorage.setItem('user', JSON.stringify(data.user));
+                localStorage.setItem('accessToken', data.accessToken);
+                localStorage.setItem('refreshToken', data.refreshToken);
+
+                toast.success("Logged in with Google successfully");
+
+                // Navigate based on role
+                if (data.user.role === 'admin') {
+                    navigate("/dashboard", { replace: true });
+                } else {
+                    navigate("/", { replace: true });
+                }
+
+                // Remove event listener after use
+                window.removeEventListener('message', handleAuthMessage);
+            }
+        });
+    };
+
+    if (isAuthenticated) {
+        return <Navigate to="/" />;
     }
 
     return (
@@ -43,12 +116,44 @@ export default function Signup() {
 
                 <form onSubmit={onSubmit}>
                     <div className="grid gap-4">
+                        <div className="grid md:grid-cols-2 gap-2">
+                            <div>
+                                <Label htmlFor="fname">First Name</Label>
+                                <Input
+                                    id="fname"
+                                    placeholder="John"
+                                    type="text"
+                                    value={form.firstName}
+                                    onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+                                    autoCapitalize="none"
+                                    autoCorrect="off"
+                                    disabled={isLoading}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="lname">Last Name</Label>
+                                <Input
+                                    id="lname"
+                                    placeholder="Doe"
+                                    type="text"
+                                    value={form.lastName}
+                                    onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+                                    autoCapitalize="none"
+                                    autoCorrect="off"
+                                    disabled={isLoading}
+                                    required
+                                />
+                            </div>
+                        </div>
                         <div className="grid gap-2">
                             <Label htmlFor="email">Email</Label>
                             <Input
                                 id="email"
                                 placeholder="name@example.com"
                                 type="email"
+                                value={form.email}
+                                onChange={(e) => setForm({ ...form, email: e.target.value })}
                                 autoCapitalize="none"
                                 autoComplete="email"
                                 autoCorrect="off"
@@ -62,6 +167,8 @@ export default function Signup() {
                                 id="phone"
                                 placeholder="Enter your phone number"
                                 type="tel"
+                                value={form.phone}
+                                onChange={(e) => setForm({ ...form, phone: e.target.value })}
                                 autoCapitalize="none"
                                 disabled={isLoading}
                                 required
@@ -74,6 +181,8 @@ export default function Signup() {
                                     id="password"
                                     type={showPassword ? "text" : "password"}
                                     autoCapitalize="none"
+                                    value={form.password}
+                                    onChange={(e) => setForm({ ...form, password: e.target.value })}
                                     autoComplete="new-password"
                                     disabled={isLoading}
                                     required
@@ -101,6 +210,8 @@ export default function Signup() {
                                     type={showConfirmPassword ? "text" : "password"}
                                     autoCapitalize="none"
                                     autoComplete="new-password"
+                                    value={form.confirmPassword}
+                                    onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
                                     disabled={isLoading}
                                     required
                                 />

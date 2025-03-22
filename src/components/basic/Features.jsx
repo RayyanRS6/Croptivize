@@ -21,7 +21,7 @@ const Features = () => {
             title: "Fertilizer Calculator",
             description: "Precise fertilizer recommendations for your crops",
             icon: Calculator,
-            path: "/guide/#fertilizer"
+            path: "/fertilizer-calculator"
         },
         {
             title: "Agricultural Shop",

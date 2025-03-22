@@ -1,31 +1,30 @@
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useState, useTransition } from "react"
 import { Link } from "react-router-dom"
 import { Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-export default function DiseasePreview() {
+const DiseasePreview = () => {
+    const [isLoading, startTransition] = useTransition()
     const [diseases, setDiseases] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
 
-    const fetchDiseases = useMemo(
-        () => async () => {
-            try {
+    const fetchDiseases = () => {
+        try {
+            startTransition(async () => {
                 const response = await fetch(`https://perenual.com/api/pest-disease-list?key=sk-KQKo67bb330fb21ff8803`)
                 const data = await response.json()
-                setDiseases(data.data.slice(0, 3)) // Get first 3 diseases
-            } catch (error) {
-                console.error("Error fetching diseases:", error)
-            } finally {
-                setIsLoading(false)
-            }
-        },
-        []
-    )
+                startTransition(() => {
+                    setDiseases(data.data.slice(9, 12))
+                })
+            })
+        } catch (error) {
+            console.error("Error fetching diseases:", error)
+        }
+    }
 
     useEffect(() => {
         fetchDiseases()
-    }, [fetchDiseases])
+    }, [])
 
     return (
         <section className="max-w-7xl mx-auto px-4 xl:px-2 py-12 md:py-16">
@@ -65,20 +64,21 @@ export default function DiseasePreview() {
                                 </CardHeader>
                             </Card>
                         ))
-                    : diseases.map((disease) => (
+                    : diseases?.map((disease) => (
                         <Card key={disease.id} className="overflow-hidden pt-0 pb-4">
                             {disease.images?.[0] && (
                                 <div className="relative">
                                     <img
                                         src={disease.images[0].regular_url || "/placeholder.jpg"}
                                         alt={disease.common_name}
-                                        fill
+                                        loading="lazy"
+                                        onEmptied={() => (this.src = "/placeholder.jpg")}
                                         className="object-cover max-h-60 w-full"
                                     />
                                 </div>
                             )}
                             <CardHeader>
-                                <CardTitle>{disease.common_name}</CardTitle>
+                                <CardTitle className="line-clamp-1 leading-normal">{disease.common_name}</CardTitle>
                                 <CardDescription>{disease.scientific_name}</CardDescription>
                             </CardHeader>
                             {disease.description && (
@@ -92,4 +92,6 @@ export default function DiseasePreview() {
         </section>
     )
 }
+
+export default DiseasePreview
 

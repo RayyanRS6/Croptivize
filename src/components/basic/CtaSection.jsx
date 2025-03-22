@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import useAuth from "@/hooks/useAuth"
 
 export default function CtaSection() {
+    const { isAuthenticated } = useAuth()
     return (
         <section className="max-w-7xl mx-auto px-4 xl:px-2 py-12 md:py-16">
             <div className="relative rounded-lg bg-primary sm:px-6 px-3 py-6 sm:py-12 md:px-12 md:py-16 lg:px-16 lg:py-20">
@@ -14,7 +16,7 @@ export default function CtaSection() {
                     </p>
                     <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                         <Button size="lg" variant="secondary" asChild>
-                            <Link to="/signup">
+                            <Link to={isAuthenticated ? "/detect" : "/signup"}>
                                 Get Started Free
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
