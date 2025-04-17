@@ -101,11 +101,14 @@ export default function Sidebar() {
             <div className="mt-auto border-t p-4">
                 <div className={cn("flex items-center gap-3", collapsed && "justify-center")}>
                     <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span className="text-sm font-medium text-primary">JD</span>
+                        <span className="text-sm font-medium text-primary">
+                            {Array.from(user.firstName)[0]}
+                            {Array.from(user.lastName)[0]}
+                        </span>
                     </div>
                     {!collapsed && (
                         <div>
-                            <p className="text-sm font-medium">John Doe</p>
+                            <p className="text-sm font-medium">{user.firstName} {user.lastName}</p>
                             <p className="text-xs text-gray-500">Administrator</p>
                         </div>
                     )}

@@ -15,6 +15,7 @@ export default function Signup() {
     const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [disabled, setDisabled] = useState(false)
 
     const [form, setForm] = useState({
         firstName: "",
@@ -66,43 +67,13 @@ export default function Signup() {
     }
 
     const handleGoogleSignup = () => {
-        // Open Google OAuth in a popup
-        const googleAuthUrl = `${baseURL}/user/auth/google`;
-        const newWindow = window.open(googleAuthUrl, '_blank', 'width=500,height=600');
-
-        if (!newWindow) {
-            toast.error("Popup blocked by browser. Please allow popups for this site.");
-            return;
-        }
-
-        // Listen for message from popup window
-        window.addEventListener('message', function handleAuthMessage(event) {
-            const data = event.data;
-
-            // Process the returned data
-            if (data && data.user) {
-                // Store user data and tokens in localStorage
-                localStorage.setItem('user', JSON.stringify(data.user));
-                localStorage.setItem('accessToken', data.accessToken);
-                localStorage.setItem('refreshToken', data.refreshToken);
-
-                toast.success("Logged in with Google successfully");
-
-                // Navigate based on role
-                if (data.user.role === 'admin') {
-                    navigate("/dashboard", { replace: true });
-                } else {
-                    navigate("/", { replace: true });
-                }
-
-                // Remove event listener after use
-                window.removeEventListener('message', handleAuthMessage);
-            }
-        });
+        setDisabled(true);
+        localStorage.setItem('pendingGoogleAuth', 'true');
+        window.location.href = `${baseURL}/user/auth/google`;
     };
 
     if (isAuthenticated) {
-        return <Navigate to="/" />;
+        return <Navigate to="/" replace />;
     }
 
     return (
@@ -248,7 +219,7 @@ export default function Signup() {
                     </div>
                 </div>
                 <div className="grid gap-4">
-                    <Button variant="outline" type="button" disabled={isLoading} onClick={handleGoogleSignup}>
+                    <Button variant="outline" type="button" disabled={disabled} onClick={handleGoogleSignup}>
                         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                             <path
                                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"

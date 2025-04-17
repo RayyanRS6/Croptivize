@@ -4,8 +4,8 @@ import { Outlet, Navigate } from "react-router-dom"
 import useAuth from "@/hooks/useAuth"
 
 export default function AdminLayout() {
-    const { user } = useAuth()
-    if (user.role !== "admin") {
+    const { user, isAuthenticated } = useAuth()
+    if (!isAuthenticated || user?.role !== "admin") {
         return <Navigate to="/" />
     }
 

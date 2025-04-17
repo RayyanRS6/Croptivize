@@ -138,7 +138,44 @@ export default function Guide() {
                                 </Card>
                             ))}
                         </TabsContent>
-                        {/* Add content for other tabs */}
+                        <TabsContent value="pests" className="space-y-4">
+                            {plantCareGuides.pestControl.map((tip, index) => (
+                                <Card key={index}>
+                                    <CardHeader>
+                                        <CardTitle>{tip.title}</CardTitle>
+                                        <CardDescription>{tip.description}</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <ul className="list-disc pl-6 space-y-2">
+                                            {tip.tips.map((item, i) => (
+                                                <li key={i} className="text-sm">
+                                                    {item}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </TabsContent>
+                        <TabsContent value="fertilizer" className="space-y-4">
+                            {plantCareGuides.fertilizer.map((tip, index) => (
+                                <Card key={index}>
+                                    <CardHeader>
+                                        <CardTitle>{tip.title}</CardTitle>
+                                        <CardDescription>{tip.description}</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <ul className="list-disc pl-6 space-y-2">
+                                            {tip.tips.map((item, i) => (
+                                                <li key={i} className="text-sm">
+                                                    {item}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </TabsContent>
                     </Tabs>
                 </div>
 
@@ -304,6 +341,76 @@ const plantCareGuides = {
                 "Apply mulch to retain moisture",
                 "Harvest crops regularly",
                 "Provide shade for sensitive plants",
+            ],
+        },
+    ],
+    pestControl: [
+        {
+            title: "Prevention Strategies",
+            description: "Proactive approaches to avoid pest problems",
+            tips: [
+                "Choose pest-resistant plant varieties",
+                "Practice good garden sanitation by removing debris",
+                "Encourage beneficial insects like ladybugs and lacewings",
+                "Use physical barriers like row covers",
+                "Implement companion planting to repel pests naturally",
+            ],
+        },
+        {
+            title: "Organic Solutions",
+            description: "Eco-friendly pest management techniques",
+            tips: [
+                "Use neem oil for fungal diseases and soft-bodied insects",
+                "Apply diatomaceous earth for crawling insects",
+                "Create homemade garlic or hot pepper sprays",
+                "Introduce beneficial nematodes for soil pest control",
+                "Use insecticidal soaps for aphids, mites, and whiteflies",
+            ],
+        },
+        {
+            title: "Integrated Pest Management",
+            description: "Systematic approach to sustainable pest control",
+            tips: [
+                "Monitor plants regularly for early detection",
+                "Identify pests correctly before treatment",
+                "Use the least toxic method first",
+                "Apply targeted treatments rather than broad-spectrum pesticides",
+                "Rotate pest control methods to prevent resistance",
+            ],
+        },
+    ],
+    fertilizer: [
+        {
+            title: "Organic Fertilizers",
+            description: "Natural nutrient sources for plants",
+            tips: [
+                "Use compost as a balanced soil amendment",
+                "Apply well-rotted manure before planting",
+                "Incorporate bone meal for phosphorus",
+                "Use fish emulsion for quick-release nitrogen",
+                "Try seaweed extract for micronutrients and growth stimulation",
+            ],
+        },
+        {
+            title: "Application Timing",
+            description: "When to fertilize for maximum effectiveness",
+            tips: [
+                "Apply balanced fertilizer at planting time",
+                "Side-dress heavy feeders when plants begin fruiting",
+                "Avoid fertilizing during dormant periods",
+                "Reduce nitrogen in late season for most crops",
+                "Apply slow-release fertilizers less frequently",
+            ],
+        },
+        {
+            title: "Nutrient Deficiency Management",
+            description: "Identifying and addressing plant nutrient needs",
+            tips: [
+                "Recognize yellow leaves as potential nitrogen deficiency",
+                "Address purplish leaves with phosphorus supplements",
+                "Treat leaf edge browning with potassium",
+                "Use calcium supplements to prevent blossom end rot",
+                "Apply magnesium (Epsom salts) for yellowing between leaf veins",
             ],
         },
     ],

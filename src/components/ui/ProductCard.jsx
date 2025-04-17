@@ -9,9 +9,9 @@ import { toast } from "sonner";
 
 // Helper function to format price
 const formatPrice = (price) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("en-PK", {
         style: "currency",
-        currency: "USD",
+        currency: "PKR",
     }).format(price);
 };
 
@@ -73,7 +73,7 @@ const ProductCard = ({ product }) => {
                     </div>
                 </div>
 
-                <h3 className="mb-1 text-lg font-semibold tracking-tight hover:underline">
+                <h3 className="mb-1 text-lg font-semibold tracking-tight hover:underline line-clamp-1">
                     {name}
                 </h3>
 

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 const MYMEMORY_API = "https://api.mymemory.translated.net/get";
 
 async function translateText(text, targetLang = "ur") {
-    if (!text || text.trim() === "") return "";
+    if (!text || text?.trim() === "") return "";
 
     try {
         // Build the API URL with query parameters
@@ -57,24 +57,27 @@ export default function DiseaseResult({ isOpen, onClose, diseases }) {
                     const translatedDescription = await translateText(disease.details.description);
 
                     const translatedTreatments = {
-                        chemical: await Promise.all(
-                            disease.details.treatment.chemical.map(async (t) => {
-                                return await translateText(t);
-                            }),
-                        ),
-                        biological: await Promise.all(
-                            disease.details.treatment.biological.map(async (t) => {
-                                return await translateText(t);
-                            }),
-                        ),
+                        chemical: disease?.details?.treatment?.chemical
+                            ? await Promise.all(
+                                disease.details.treatment.chemical.map(async (t) => {
+                                    return await translateText(t);
+                                })
+                            )
+                            : null,
+                        biological: disease?.details?.treatment?.biological
+                            ? await Promise.all(
+                                disease?.details?.treatment?.biological?.map(async (t) => {
+                                    return await translateText(t);
+                                }),
+                            ) : null,
                         prevention: await Promise.all(
-                            disease.details.treatment.prevention.map(async (t) => {
+                            disease?.details?.treatment?.prevention?.map(async (t) => {
                                 return await translateText(t);
                             }),
                         ),
                     }
 
-                    const translatedCause = disease.details.cause
+                    const translatedCause = disease?.details?.cause
                         ? await translateText(disease.details.cause)
                         : null
 

@@ -1,6 +1,7 @@
-import { Search } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { useState } from "react";
+import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -8,67 +9,76 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useNavigate } from "react-router-dom"
-import { useLogoutMutation } from "@/services/authApi"
-import useLogout from "../../hooks/useLogout"
-import useAuth from "../../hooks/useAuth"
-import { toast } from "sonner"
+} from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
+import { useLogoutMutation } from "@/services/authApi";
+import useLogout from "../../hooks/useLogout";
+import useAuth from "../../hooks/useAuth";
+import { toast } from "sonner";
+import ProfileUpdateModal from "../basic/ProfileUpdateModal";
 
 export default function Header() {
-    const { user } = useAuth()
-    const navigate = useNavigate()
+    const { user } = useAuth();
+    const navigate = useNavigate();
+    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
-    const [logout] = useLogoutMutation()
+    const [logout] = useLogoutMutation();
     const handleLogout = async () => {
         try {
-            await logout().unwrap()
-            useLogout()
-            toast.success("Logged out successfully")
-            navigate("/login")
+            await logout().unwrap();
+            useLogout();
+            toast.success("Logged out successfully");
+            navigate("/login");
         } catch (error) {
-            console.error(error)
-            toast.error("Failed to logout")
+            console.error(error);
+            toast.error("Failed to logout");
         }
-    }
+    };
 
     return (
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-white px-4 md:px-6">
-            <div className="md:flex-1 flex-initial ml-8 md:ml-0">
-                <form className="relative hidden md:block">
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-                    <Input type="search" placeholder="Search..." className="w-full rounded-lg bg-white pl-8 md:w-[300px]" />
-                </form>
-            </div>
-            <div className="flex items-center">
+        <>
+            <header className="flex items-center justify-between p-3 bg-white border-b shadow-sm">
+                <div className="flex items-center gap-2">
+                    <div className="relative ml-4">
+                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                        <Input
+                            type="search"
+                            placeholder="Search..."
+                            className="w-64 pl-8"
+                        />
+                    </div>
+                </div>
+
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                            <div className="h-8 w-8 p-2 rounded-full bg-primary/10 flex items-center justify-center">
-                                <span className="text-sm font-medium text-primary">
-                                    {user ? (
-                                        <span>
-                                            {user?.firstName?.[0]?.toUpperCase()}
-                                            {user?.lastName?.[0]?.toUpperCase()}
-                                        </span>
-                                    ) : (
-                                        "DP"
-                                    )}
-                                </span>
+                        <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                            <div className="flex size-9 p-2 items-center justify-center rounded-full bg-gray-200 text-sm font-medium">
+                                {user ? (
+                                    <>
+                                        {user?.firstName?.[0]?.toUpperCase()}
+                                        {user?.lastName?.[0]?.toUpperCase()}
+                                    </>
+                                ) : (
+                                    "DP"
+                                )}
                             </div>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Profile</DropdownMenuItem>
-                        <DropdownMenuItem>Settings</DropdownMenuItem>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => setIsProfileModalOpen(true)}>
+                            Profile
+                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-            </div>
-        </header>
-    )
-}
+            </header>
 
+            <ProfileUpdateModal
+                isOpen={isProfileModalOpen}
+                onClose={() => setIsProfileModalOpen(false)}
+            />
+        </>
+    );
+}

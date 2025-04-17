@@ -3,10 +3,13 @@ import { Link } from "react-router-dom"
 import { Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import DiseaseDetailDialog from "./DiseaseDetailDialog"
 
 const DiseasePreview = () => {
     const [isLoading, startTransition] = useTransition()
     const [diseases, setDiseases] = useState([])
+    const [selectedDisease, setSelectedDisease] = useState(null)
+    const [dialogOpen, setDialogOpen] = useState(false)
 
     const fetchDiseases = () => {
         try {
@@ -25,6 +28,11 @@ const DiseasePreview = () => {
     useEffect(() => {
         fetchDiseases()
     }, [])
+
+    const handleDiseaseClick = (disease) => {
+        setSelectedDisease(disease)
+        setDialogOpen(true)
+    }
 
     return (
         <section className="max-w-7xl mx-auto px-4 xl:px-2 py-12 md:py-16">
@@ -65,7 +73,11 @@ const DiseasePreview = () => {
                             </Card>
                         ))
                     : diseases?.map((disease) => (
-                        <Card key={disease.id} className="overflow-hidden pt-0 pb-4">
+                        <Card
+                            key={disease.id}
+                            className="overflow-hidden pt-0 pb-4 cursor-pointer transition-shadow hover:shadow-md"
+                            onClick={() => handleDiseaseClick(disease)}
+                        >
                             {disease.images?.[0] && (
                                 <div className="relative">
                                     <img
@@ -89,9 +101,15 @@ const DiseasePreview = () => {
                         </Card>
                     ))}
             </div>
+
+            {/* Disease Detail Dialog */}
+            <DiseaseDetailDialog
+                disease={selectedDisease}
+                open={dialogOpen}
+                onOpenChange={setDialogOpen}
+            />
         </section>
     )
 }
 
 export default DiseasePreview
-

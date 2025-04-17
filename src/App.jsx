@@ -10,13 +10,16 @@ import Guide from './pages/sections/Guide'
 import FertilizerCalculator from './pages/sections/FertilizerCalculator'
 import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
+import GoogleSuccessLogin from './pages/auth/GoogleSuccessLogin'
 import AdminLayout from './layout/AdminLayout'
 import Dashboard from './pages/dashboard/Dashboard'
 import Products from './pages/dashboard/Products'
 import Orders from './pages/dashboard/Orders'
 import Customers from './pages/dashboard/Customers'
 import { Toaster } from './components/ui/sonner'
+import { toast } from 'sonner'
 import './App.css'
+import { useEffect } from 'react'
 
 function App() {
 
@@ -81,7 +84,18 @@ function App() {
       path: "/signup",
       element: <Signup />
     },
+    {
+      path: "/login/success",
+      element: <GoogleSuccessLogin />
+    }
   ])
+
+  useEffect(() => {
+    if (localStorage.getItem('googleAuthSuccess') === 'true') {
+      toast.success("Logged in with Google successfully");
+      localStorage.removeItem('googleAuthSuccess');
+    }
+  }, []);
 
   return (
     <>

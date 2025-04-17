@@ -21,7 +21,15 @@ export const userApi = createApi({
             }),
             invalidatesTags: ["User"],
         }),
+        updateUser: builder.mutation({
+            query: (credentials) => ({
+                url: `/user/updateProfile/`,
+                method: "PUT",
+                body: credentials,
+            }),
+            invalidatesTags: ["User"],
+        }),
     }),
 });
 
-export const { useGetUsersQuery, useUpdateRoleMutation } = userApi;
+export const { useGetUsersQuery, useUpdateRoleMutation, useUpdateUserMutation } = userApi;
