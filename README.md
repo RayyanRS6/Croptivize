@@ -141,14 +141,8 @@ Contributions are what make the open-source community such an amazing place to l
 
 ---
 
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
----
-
 ## 📧 Contact
 
 Muhammad Rayyan Bin Salman - [mrayyansalman69@gmail.com](mailto:mrayyansalman69@gmail.com)
 
-Project Link: [https://github.com/RayyanRS6/Croptivize-Complete](https://github.com/RayyanRS6/Croptivize-Complete)
+Project Link: [https://github.com/RayyanRS6/Croptivize](https://github.com/RayyanRS6/Croptivize)
