@@ -28,3 +28,11 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
     }
 
 })
+
+// Use after verifyJWT on routes that only admins may call.
+export const verifyAdmin = (req, _, next) => {
+    if (req.user?.role !== "admin") {
+        return next(new ApiError(403, "Admin access required"))
+    }
+    next()
+}

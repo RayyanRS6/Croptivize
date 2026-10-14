@@ -12,7 +12,7 @@ import {
     googleAuthStatus,
     getUserCount
 } from "../controllers/user.controller.js";
-import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { verifyJWT, verifyAdmin } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
@@ -24,8 +24,8 @@ router.get("/auth/google/status", googleAuthStatus);
 router.post("/logout", verifyJWT, logout);
 router.post("/recreateAccessToken", recreateAccessToken);
 router.put("/updateProfile", verifyJWT, updateProfile);
-router.get("/getUsers", verifyJWT, getUsers);
-router.put("/updateUserRole/:id", verifyJWT, updateUserRole);
-router.get("/count", verifyJWT, getUserCount);
+router.get("/getUsers", verifyJWT, verifyAdmin, getUsers);
+router.put("/updateUserRole/:id", verifyJWT, verifyAdmin, updateUserRole);
+router.get("/count", verifyJWT, verifyAdmin, getUserCount);
 
 export default router;

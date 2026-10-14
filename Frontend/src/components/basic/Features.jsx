@@ -7,7 +7,7 @@ const Features = () => {
     const features = [
         {
             title: "Disease Detection",
-            description: "AI-powered plant disease detection with 99% accuracy",
+            description: "AI-powered plant disease detection with 97% accuracy",
             icon: Leaf,
             path: "/detect"
         },

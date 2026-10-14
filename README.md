@@ -95,6 +95,7 @@ Make sure you have the following installed on your system:
     ```env
     VITE_API_BASE_URL=http://localhost:8000
     ```
+    The home page's disease library is served by `Frontend/api/plant-diseases.js`, a Vercel function. Set `PERENUAL_API_KEY` in the Vercel project's environment variables (run `vercel dev` to use it locally). The key never reaches the browser.
 
 4.  **Setup the Flask ML API:**
     ```sh

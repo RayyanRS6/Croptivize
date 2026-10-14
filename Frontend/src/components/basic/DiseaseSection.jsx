@@ -12,17 +12,21 @@ const DiseasePreview = () => {
     const [dialogOpen, setDialogOpen] = useState(false)
 
     const fetchDiseases = () => {
-        try {
-            startTransition(async () => {
-                const response = await fetch(`https://perenual.com/api/pest-disease-list?key=sk-KQKo67bb330fb21ff8803`)
+        startTransition(async () => {
+            try {
+                // Served by api/plant-diseases.js, which keeps the Perenual key on the server
+                const response = await fetch("/api/plant-diseases")
+                if (!response.ok) {
+                    throw new Error(`Disease library request failed with ${response.status}`)
+                }
                 const data = await response.json()
                 startTransition(() => {
-                    setDiseases(data.data.slice(9, 12))
+                    setDiseases(data?.data?.slice(9, 12) ?? [])
                 })
-            })
-        } catch (error) {
-            console.error("Error fetching diseases:", error)
-        }
+            } catch (error) {
+                console.error("Error fetching diseases:", error)
+            }
+        })
     }
 
     useEffect(() => {

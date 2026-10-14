@@ -140,12 +140,12 @@ const faqs = [
     {
         question: "How accurate is the disease detection?",
         answer:
-            "Our AI-powered disease detection system has an accuracy rate of over 95% for most common plant diseases. The system is continuously learning and improving.",
+            "Our disease detection model is 97% accurate on the cotton-leaf conditions it was trained to recognize.",
     },
     {
         question: "What types of plants can be diagnosed?",
         answer:
-            "We support a wide range of crops and plants including wheat, rice, corn, tomatoes, potatoes, and many more. Our database is constantly expanding.",
+            "Croptivize currently diagnoses cotton leaves: aphids, army worm, bacterial blight, powdery mildew and target spot, as well as healthy leaves.",
     },
     {
         question: "How long does it take to get results?",
